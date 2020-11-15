@@ -31,6 +31,7 @@ pub struct Game {
 }
 
 impl Game {
+    // 初始化属性
     pub fn new(width: i32, height: i32) -> Game {
         Game {
             snake: Snake::new(2, 2),
@@ -44,6 +45,7 @@ impl Game {
         }
     }
 
+    // 根据键位改变方向属性
     pub fn key_pressed(&mut self, key: Key) {
         if self.game_over {
             return;
@@ -64,6 +66,7 @@ impl Game {
         self.update_snake(dir);
     }
 
+    // 绘制
     pub fn draw(&self, con: &Context, g: &mut G2d) {
         self.snake.draw(con, g);
 
@@ -81,6 +84,7 @@ impl Game {
         }
     }
 
+    // 更新食物或重来
     pub fn update(&mut self, delta_time: f64) {
         self.waiting_time += delta_time;
 
@@ -100,6 +104,7 @@ impl Game {
         }
     }
 
+    // 判断是否吃到食物
     fn check_eating(&mut self) {
         let (head_x, head_y): (i32, i32) = self.snake.head_position();
         if self.food_exists && self.food_x == head_x && self.food_y == head_y {
@@ -108,6 +113,7 @@ impl Game {
         }
     }
 
+    // 判断存活
     fn check_if_snake_alive(&self, dir: Option<Direction>) -> bool {
         let (next_x, next_y) = self.snake.next_head(dir);
         if self.snake.overlap_tail(next_x, next_y) {
@@ -117,6 +123,7 @@ impl Game {
         next_x > 0 && next_y > 0 && next_x < self.width - 1 && next_y < self.height - 1
     }
 
+    // 增加食物
     fn add_food(&mut self) {
         let mut rng = thread_rng();
 
@@ -132,6 +139,7 @@ impl Game {
         self.food_exists = true;
     }
 
+    // 更新蛇的位置
     fn update_snake(&mut self, dir: Option<Direction>) {
         if self.check_if_snake_alive(dir) {
             self.snake.move_forward(dir);
@@ -142,6 +150,7 @@ impl Game {
         self.waiting_time = 0.0;
     }
 
+    // 重新开始
     fn restart(&mut self) {
         self.snake = Snake::new(2, 2);
         self.waiting_time = 0.0;

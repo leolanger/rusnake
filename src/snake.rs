@@ -36,6 +36,7 @@ pub struct Snake {
 }
 
 impl Snake {
+    // 初始化蛇的状态
     pub fn new(x: i32, y: i32) -> Snake {
         let mut body: LinkedList<Block> = LinkedList::new();
         body.push_back(Block { x: x + 2, y });
@@ -49,17 +50,20 @@ impl Snake {
         }
     }
 
+    // 画蛇
     pub fn draw(&self, con: &Context, g: &mut G2d) {
         for block in &self.body {
             draw_block(SNAKE_COLOR, block.x, block.y, con, g);
         }
     }
 
+    // 头的位置
     pub fn head_position(&self) -> (i32, i32) {
         let head_block = self.body.front().unwrap();
         (head_block.x, head_block.y)
     }
 
+    // 前进方向
     pub fn move_forward(&mut self, dir: Option<Direction>) {
         match dir {
             Some(d) => self.direction = d,
@@ -95,6 +99,7 @@ impl Snake {
         self.direction
     }
 
+    // 下一刻头的位置
     pub fn next_head(&self, dir: Option<Direction>) -> (i32, i32) {
         let (head_x, head_y): (i32, i32) = self.head_position();
 
@@ -112,11 +117,13 @@ impl Snake {
         }
     }
 
+    // 重新加载尾巴
     pub fn restore_tail(&mut self) {
         let blk = self.tail.clone().unwrap();
         self.body.push_back(blk);
     }
 
+    // 增长
     pub fn overlap_tail(&self, x: i32, y: i32) -> bool {
         let mut ch = 0;
         for block in &self.body {
